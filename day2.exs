@@ -1,3 +1,11 @@
+input_0 = """
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+"""
+
 input = """
 Game 1: 10 green, 9 blue, 1 red; 1 red, 7 green; 11 green, 6 blue; 8 blue, 12 green
 Game 2: 11 red, 7 green, 3 blue; 1 blue, 8 green, 5 red; 2 red, 12 green, 1 blue; 10 green, 5 blue, 7 red
@@ -106,11 +114,19 @@ defmodule Day2 do
     defstruct red: 0, blue: 0, green: 0
   end
 
-  def solution2(input) do
+  def solution_a(input) do
     input
     |> parse()
     |> Enum.filter(&game_valid/1)
     |> Enum.map(fn {id, _} -> id end)
+    |> Enum.sum()
+ end
+
+ def solution_b(input) do
+    input
+    |> parse()
+    |> Enum.map(&reduce_to_max_sample/1)
+    |> Enum.map(&(&1.red * &1.blue * &1.green))
     |> Enum.sum()
  end
 
@@ -164,7 +180,18 @@ defmodule Day2 do
   def sample_valid(_)  do
     false
   end
+
+  def reduce_to_max_sample({_, samples}) do
+    samples
+    |> Enum.reduce( 
+      %Sample{},
+      fn sample, acc -> 
+        Map.merge(acc, sample, fn _, v1, v2 -> max(v1,v2) end)
+      end
+    )
+  end
 end
 
-IO.puts("Solution #{Day2.solution2(input)}")
+# IO.puts("Solution #{Day2.solution_a(input)}")
+IO.puts("Solution #{Day2.solution_b(input)}")
 
