@@ -1,10 +1,4 @@
-input_0 = """
-32T3K 765
-T55J5 684
-KK677 28
-KTJJT 220
-QQQJA 483
-"""
+
 
 input = """
 398KA 456
